@@ -1,14 +1,28 @@
 import Rating from "react-rating";
 import {AiOutlineStar,AiFillStar} from "react-icons/ai"
 import { addToLocalStorage } from "../LocalStorage/Localstorage";
+import axios from "axios";
+import useAxios from "../../hooks/useAxios/useAxios";
+import { useContext } from "react";
+import { AuthContext } from "../../providers/AuthContext";
 
 
 const Product = ({ product }) => {
+  const {userC} = useContext(AuthContext);
+ const email = userC?.email;
+  const loader = useAxios();
   const {id, img, name, price, ratings, seller } =
     product;
 
-    const handleAddCart = (id) => {
-           addToLocalStorage(id);
+
+    const handleAddCart = () => {
+      const withOutId ={...product,email};
+      delete withOutId._id;
+      console.log(withOutId)
+      loader.post('/cart', withOutId)
+      .then(res => {
+        console.log(res.data)
+      })
      }
 
 
