@@ -2,22 +2,32 @@ import { useOutletContext } from "react-router-dom";
 import CartProduct from "../CartProduct/CartProduct";
 import { AiFillDelete, AiFillCreditCard } from "react-icons/ai";
 import { getFromLocalStorage } from "../LocalStorage/Localstorage";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import useAxios from "../../hooks/useAxios/useAxios";
+import { AuthContext } from "../../providers/AuthContext";
 
 const CartProducts = () => {
   const [toRender, setToRender] = useState(false);
   const [products, setProducts] = useState([]);
-  const allProducts = useOutletContext();
-  const savedProducts = getFromLocalStorage();
+  // const allProducts = useOutletContext();
+  // const savedProducts = getFromLocalStorage();
   const [showAll, setShowAll] = useState(false);
+  const {userC}= useContext(AuthContext)
+  const loader = useAxios();
   const handleRender = ()=>{
     setToRender(!toRender)
   }
+  const email = userC?.email;
   useEffect(() => {
-    const toDisplayProduct = allProducts.filter((product) =>
-      savedProducts.includes(product.id)
-    );
-    setProducts(toDisplayProduct);
+    // const toDisplayProduct = allProducts.filter((product) =>
+    //   savedProducts.includes(product.id)
+    // );
+    // setProducts(toDisplayProduct);
+    loader.get(`/cartData?email=${email}`)
+    .then(res =>{
+       console.log('res.data:', res.data)
+       setProducts(res.data)
+      })
   }, [toRender]);
   const handleShowAll = () => {
     setShowAll(!showAll);
@@ -44,11 +54,11 @@ const CartProducts = () => {
           <div className="px-5">
             <h4 className="text-3xl font-bold py-4">Order Summary</h4>
             <p className="py-2">Selected Item:{products?.length} </p>
-            <p className="py-2">Total Price: ${totalPrice}</p>
-            <p className="py-2">Total Shipping Charge: ${totalShipping}</p>
-            <p className="py-2">Tex: ${tex}</p>
+            <p className="py-2">Total Price: ${totalPrice.toFixed(0)}</p>
+            <p className="py-2">Total Shipping Charge: ${totalShipping.toFixed(0)}</p>
+            <p className="py-2">Tex: ${tex.toFixed(0)}</p>
             <h4 className=" text-2xl font-bold py-2">
-              Grand Total: ${totalPrice + totalShipping + tex}{" "}
+              Grand Total: ${(totalPrice + totalShipping + tex).toFixed(0)}{" "}
             </h4>
           </div>
           <div className="flex flex-col gap-3">

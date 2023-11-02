@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { AuthContext } from "../../providers/AuthContext";
+import useAxios from "../../hooks/useAxios/useAxios";
 
 
 
@@ -14,6 +15,7 @@ const Login = () => {
   const [showPass, setShowPass] = useState(false);
   const{ signIn} = useContext(AuthContext);
   const navigate = useNavigate();
+  const loader = useAxios();
 
   const handlePass = () => { 
     // showPass.value = !showPass.value
@@ -32,17 +34,22 @@ const Login = () => {
     }
     else{
     signIn(email,password)
-    .then(result => {
-
-      const user = result.user;
-      if (!user.emailVerified) {
-        setErrorMsg("Please check your email and verify it!!")
-      }else if (user.emailVerified) {
-        setSuccessMsg("You are loged In successfully!")
-        e.target.email.value = '';
-        e.target.password.value = '';
-        navigate( "/profile");
-      }
+    .then(() => {
+      // console.log(email)
+      // const user = result.user;
+      
+      // if (!user.emailVerified) {
+      //   setErrorMsg("Please check your email and verify it!!")
+      // }else if (user.emailVerified) {
+      //   setSuccessMsg("You are loged In successfully!")
+      //   e.target.email.value = '';
+      //   e.target.password.value = '';
+      //   navigate( "/profile");
+      // }
+      loader.post('/jwt',{email})
+      .then(res => {
+        console.log(res.data)
+      })
     })
     .catch(err => {
       if (err.message === 'Firebase: Error (auth/invalid-login-credentials).') {

@@ -7,10 +7,17 @@ const Products = () => {
     const [products, setProducts] = useState();
     const [currenPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(10)
+    // const [count, setCoutn] = useState(0)
     const totalData = loaderProducts.length;
     const totalPages = Math.ceil(totalData / itemsPerPage);
     const pages = [...Array(totalPages).keys()];
     // console.log(pages)
+
+    // useEffect(() => { 
+    //     fetch('http://localhost:5000/productsCounts')
+    //     .then(res => res.json())
+    //     .then(result => setCoutn(result.count))
+    //  },[])
 
     useEffect(() => { 
         fetch(`http://localhost:5000/productsByCount?page=${currenPage}&size=${itemsPerPage}`)

@@ -1,14 +1,21 @@
 
 import { RiDeleteBin5Fill} from 'react-icons/ri'
 import { removeFromLocalStorage } from '../LocalStorage/Localstorage';
+import useAxios from '../../hooks/useAxios/useAxios';
 
 const CartProduct = ({product,handleRender}) => {
-    const {id, img, name, price, shipping } =
+    const {_id, img, name, price, shipping } =
     product;
+    // console.log(product)
+    const loader = useAxios();
 
     const handleRemove = (id) => { 
-        removeFromLocalStorage(id)
-        handleRender();
+        // removeFromLocalStorage(id)
+        loader.delete(`/cart/${id}`)
+        .then(res => {
+            console.log(res.data)
+            handleRender();
+        })
      }
 
     return (
@@ -20,9 +27,9 @@ const CartProduct = ({product,handleRender}) => {
             <div className='flex flex-col grow'>
                 <h4>{name}</h4>
                 <p>Price: <span className='text-[#F99000]'>${price}</span></p>
-                <p>Shipping Charge: <span className='text-[#F99000]'>${shipping}</span></p>
+                <p>Shipping Charge: <span className='text-[#F99000]'>${parseFloat(shipping)}</span></p>
             </div>
-            <div onClick={() => handleRemove(id)} className='flex justify-center items-center text-4xl  h-auto'>
+            <div onClick={() => handleRemove(_id)} className='flex justify-center items-center text-4xl  h-auto'>
                 <button className="text-red-300 rounded-full bg-red-500 p-2"><RiDeleteBin5Fill></RiDeleteBin5Fill></button>
             </div>
             </div>

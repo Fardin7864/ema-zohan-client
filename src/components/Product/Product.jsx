@@ -11,7 +11,7 @@ const Product = ({ product }) => {
   const {userC} = useContext(AuthContext);
  const email = userC?.email;
   const loader = useAxios();
-  const {id, img, name, price, ratings, seller } =
+  const { img, name, price, ratings, seller } =
     product;
 
 
@@ -49,7 +49,7 @@ const Product = ({ product }) => {
             </p>
         </div>
         <div className="card-actions justify-end">
-        <div onClick={() => handleAddCart(id)}  className="w-full btn flex justify-center items-center h-12 bg-[#FFE0B3] rounded-br-lg rounded-bl-lg">
+        <div onClick={ handleAddCart}  className="w-full btn flex justify-center items-center h-12 bg-[#FFE0B3] rounded-br-lg rounded-bl-lg">
           <button>Add to Cart </button>
         </div>
         </div>
