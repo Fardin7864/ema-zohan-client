@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const instance = axios.create({
-    baseURL: 'http://localhost:5000',
+    baseURL: 'https://ema-zohan-server-cw431fdf8-fardin7864s-projects.vercel.app',
     withCredentials: true,
 })
 

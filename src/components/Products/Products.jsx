@@ -3,6 +3,7 @@ import Product from "../Product/Product";
 import { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import useAxios from "../../hooks/useAxios/useAxios";
 
 const Products = () => {
   // const loaderProducts = useLoaderData();
@@ -14,24 +15,32 @@ const Products = () => {
   // const totalData = loaderProducts.length;
   const totalPages = Math.ceil(totalDataCount / itemsPerPage);
   const pages = [...Array(totalPages).keys()];
+  const loader = useAxios();
 
   useEffect(() => {
     // Fetch total data count
-    fetch("http://localhost:5000/productsCounts")
+    fetch("https://ema-zohan-server-cw431fdf8-fardin7864s-projects.vercel.app/productsCounts")
       .then((res) => res.json())
       .then((result) => setTotalDataCount(result.count));
   }, []);
 
   useEffect(() => {
-    fetch(
-      `http://localhost:5000/productsByCount?page=${currenPage}&size=${itemsPerPage}`
-    )
-      .then((res) => res.json())
-      .then((data) => {
-        setProducts(data);
-        setIsLoading(false);
-      });
-  }, [currenPage, itemsPerPage]);
+    // fetch(
+    //   `https://ema-zohan-server-cw431fdf8-fardin7864s-projects.vercel.app/productsByCount?page=${currenPage}&size=${itemsPerPage}`
+    // )
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     setProducts(data);
+    //     setIsLoading(false);
+    //   });
+
+    loader.get(`/productsByCount?page=${currenPage}&size=${itemsPerPage}`)
+          .then((data) => {
+            setProducts(data.data);
+            setIsLoading(false);
+          });
+
+  }, [currenPage, itemsPerPage,loader]);
 
   const handleSize = (e) => {
     const val = parseInt(e.target.value);

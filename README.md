@@ -19,4 +19,7 @@
 2. express
 3. jsonwebtoken
 
+## Deploy :
+vercel
+
 #### Demo: https://chat-app-1bf83.web.app
