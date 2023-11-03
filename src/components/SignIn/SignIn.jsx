@@ -14,6 +14,7 @@ import {
 import app from "../../fire-base/firebase.init";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../providers/AuthContext";
+import useAxios from "../../hooks/useAxios/useAxios";
 // import { signal } from "@preact/signals";
 
 const SignIn = () => {
@@ -22,6 +23,7 @@ const SignIn = () => {
   const [successMsg, setSuccessMsg] = useState();
   const [showPass, setShowPass] = useState(false);
   const navigate = useNavigate();
+  const loader = useAxios();
 
   // context
   const {createUser, updateState } = useContext(AuthContext);
@@ -42,7 +44,14 @@ const SignIn = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         navigate("/profile")
-        updateState(result.user)})
+        updateState(result.user)
+        const email = result.user.email;
+        console.log(email)
+        loader.post('/jwt',{email})
+        .then(res => {
+          console.log(res.data)
+        })
+      })
       .catch((err) => console.log(err.message));
   };
   // Github authantication
@@ -75,8 +84,12 @@ const SignIn = () => {
       .then(result => {
         const users = result.user
         setUser(users);
+        loader.post('/jwt',{email})
+        .then(res => {
+          console.log(res.data)
+        })
         // updateState(users)
-        sendEmailVerification(auth.currentUser)
+        // sendEmailVerification(auth.currentUser)
         .then(() => {
           setSuccessMsg('Please check you email and verify it!')
         })
