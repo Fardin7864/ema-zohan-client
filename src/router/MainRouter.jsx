@@ -24,7 +24,7 @@ import Profile from '../components/Profile/Profile';
             {
                 path: '/products',
                 element: <Products></Products>,
-                loader:() => fetch('http://localhost:5000/products')
+                // loader:() => fetch('http://localhost:5000/products')
             },
             {
                 path: '/login',
