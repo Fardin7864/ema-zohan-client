@@ -5,6 +5,7 @@ import { getFromLocalStorage } from "../LocalStorage/Localstorage";
 import { useContext, useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios/useAxios";
 import { AuthContext } from "../../providers/AuthContext";
+import Skeleton from "react-loading-skeleton";
 
 const CartProducts = () => {
   const [toRender, setToRender] = useState(false);
@@ -14,6 +15,7 @@ const CartProducts = () => {
   const [showAll, setShowAll] = useState(false);
   const {userC}= useContext(AuthContext)
   const loader = useAxios();
+  const [isLoading, setIsLoading] = useState(true);
   const handleRender = ()=>{
     setToRender(!toRender)
   }
@@ -27,8 +29,9 @@ const CartProducts = () => {
     .then(res =>{
        console.log('res.data:', res.data)
        setProducts(res.data)
+       setIsLoading(false)
       })
-  }, [toRender]);
+  }, [toRender, loader,email]);
   const handleShowAll = () => {
     setShowAll(!showAll);
   };
@@ -45,11 +48,35 @@ const CartProducts = () => {
   return (
     <div className="">
       <div className="flex justify-center gap-4">
+        {isLoading? 
+        (
+          <div className=" grid grid-col-1">
+            {Array(products.length || 3).fill(null).map((_,index)=>
+            (
+              <div key={index} className='p-3 flex rounded-lg gap-5'>
+              <div className="w-24 h-24">
+                <Skeleton height={80}/>
+              </div>
+                  <div className=" flex flex-col grow">
+                  <Skeleton height={30} width={100}/>
+                  <Skeleton height={20} width={100} />
+                  <Skeleton height={20} width={100} />
+                  </div>
+                  <div className='flex justify-center items-center text-4xl  h-auto'>
+                      <Skeleton height={30} width={30} className=" rounded-full"/>
+                  </div>
+              </div>
+            ))}
+
+        </div>
+         )
+        :
         <div className="px-3">
           {toDisplay?.map((product) => (
             <CartProduct key={product.id} product={product} handleRender ={handleRender}></CartProduct>
           ))}
         </div>
+        }
         <div className="bg-[#ff99004d] w-1/3 h-5/6 rounded-xl my-5">
           <div className="px-5">
             <h4 className="text-3xl font-bold py-4">Order Summary</h4>
